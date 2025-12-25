@@ -10,6 +10,9 @@ import {
   ChevronDown,
   ChevronUp,
   FileText,
+  TrendingUp,
+  Package,
+  XCircle,
 } from 'lucide-react';
 import type { ProcessingResult, Issue, IssueSeverity } from '@/lib/types';
 
@@ -18,10 +21,10 @@ interface ResultsDisplayProps {
 }
 
 export function ResultsDisplay({ result }: ResultsDisplayProps) {
-  const [expandedSection, setExpandedSection] = useState<string | null>('summary');
+  const [expandedSection, setExpandedSection] = useState<string | null>('downloads');
   const [issueFilter, setIssueFilter] = useState<IssueSeverity | 'all'>('all');
 
-  const { summary, issues, matches } = result;
+  const { summary, issues } = result;
 
   const filteredIssues = useMemo(() => {
     if (issueFilter === 'all') return issues;
@@ -47,45 +50,83 @@ export function ResultsDisplay({ result }: ResultsDisplayProps) {
   const formatNumber = (n: number) => n.toLocaleString();
   const formatPercent = (n: number) => n.toFixed(1) + '%';
 
+  const hasErrors = summary.errorCount > 0;
+  const hasWarnings = summary.warningCount > 0;
+
   return (
     <div className="space-y-6">
+      {/* Status Banner */}
+      <div className={`rounded-xl p-4 ${hasErrors ? 'bg-red-50 border border-red-100' : hasWarnings ? 'bg-amber-50 border border-amber-100' : 'bg-emerald-50 border border-emerald-100'}`}>
+        <div className="flex items-center gap-3">
+          {hasErrors ? (
+            <XCircle className="h-6 w-6 text-red-500" />
+          ) : hasWarnings ? (
+            <AlertTriangle className="h-6 w-6 text-amber-500" />
+          ) : (
+            <CheckCircle className="h-6 w-6 text-emerald-500" />
+          )}
+          <div>
+            <h3 className={`font-semibold ${hasErrors ? 'text-red-900' : hasWarnings ? 'text-amber-900' : 'text-emerald-900'}`}>
+              {hasErrors ? 'Processing completed with errors' : hasWarnings ? 'Processing completed with warnings' : 'Processing completed successfully'}
+            </h3>
+            <p className={`text-sm ${hasErrors ? 'text-red-700' : hasWarnings ? 'text-amber-700' : 'text-emerald-700'}`}>
+              {formatNumber(summary.updatedCount)} inventory updates ready • {formatPercent(summary.matchRate)} match rate
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg border p-4 text-center">
-          <div className="text-3xl font-bold text-indigo-600">
+        <div className="bg-white rounded-xl border border-gray-100 p-4">
+          <div className="flex items-center gap-2 text-gray-500 mb-2">
+            <TrendingUp className="h-4 w-4" />
+            <span className="text-xs font-medium uppercase tracking-wide">Match Rate</span>
+          </div>
+          <div className="text-2xl font-bold text-gray-900 tabular-nums">
             {formatPercent(summary.matchRate)}
           </div>
-          <div className="text-sm text-gray-500 mt-1">Match Rate</div>
         </div>
-        <div className="bg-white rounded-lg border p-4 text-center">
-          <div className="text-3xl font-bold text-green-600">
+        <div className="bg-white rounded-xl border border-gray-100 p-4">
+          <div className="flex items-center gap-2 text-gray-500 mb-2">
+            <Package className="h-4 w-4" />
+            <span className="text-xs font-medium uppercase tracking-wide">Will Update</span>
+          </div>
+          <div className="text-2xl font-bold text-emerald-600 tabular-nums">
             {formatNumber(summary.updatedCount)}
           </div>
-          <div className="text-sm text-gray-500 mt-1">Will Update</div>
         </div>
-        <div className="bg-white rounded-lg border p-4 text-center">
-          <div className={`text-3xl font-bold ${summary.errorCount > 0 ? 'text-red-600' : 'text-gray-400'}`}>
+        <div className="bg-white rounded-xl border border-gray-100 p-4">
+          <div className="flex items-center gap-2 text-gray-500 mb-2">
+            <XCircle className="h-4 w-4" />
+            <span className="text-xs font-medium uppercase tracking-wide">Errors</span>
+          </div>
+          <div className={`text-2xl font-bold tabular-nums ${summary.errorCount > 0 ? 'text-red-600' : 'text-gray-300'}`}>
             {formatNumber(summary.errorCount)}
           </div>
-          <div className="text-sm text-gray-500 mt-1">Errors</div>
         </div>
-        <div className="bg-white rounded-lg border p-4 text-center">
-          <div className={`text-3xl font-bold ${summary.warningCount > 0 ? 'text-amber-600' : 'text-gray-400'}`}>
+        <div className="bg-white rounded-xl border border-gray-100 p-4">
+          <div className="flex items-center gap-2 text-gray-500 mb-2">
+            <AlertTriangle className="h-4 w-4" />
+            <span className="text-xs font-medium uppercase tracking-wide">Warnings</span>
+          </div>
+          <div className={`text-2xl font-bold tabular-nums ${summary.warningCount > 0 ? 'text-amber-600' : 'text-gray-300'}`}>
             {formatNumber(summary.warningCount)}
           </div>
-          <div className="text-sm text-gray-500 mt-1">Warnings</div>
         </div>
       </div>
 
       {/* Download Section */}
-      <div className="bg-white rounded-lg border">
+      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         <button
           onClick={() => toggleSection('downloads')}
-          className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-gray-50"
+          className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
         >
-          <div className="flex items-center gap-2">
-            <Download className="h-5 w-5 text-indigo-600" />
-            <span className="font-medium">Download Files</span>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-gray-900 rounded-lg">
+              <Download className="h-4 w-4 text-white" />
+            </div>
+            <span className="font-semibold text-gray-900">Download Files</span>
           </div>
           {expandedSection === 'downloads' ? (
             <ChevronUp className="h-5 w-5 text-gray-400" />
@@ -95,45 +136,45 @@ export function ResultsDisplay({ result }: ResultsDisplayProps) {
         </button>
 
         {expandedSection === 'downloads' && (
-          <div className="px-4 pb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="px-5 pb-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             <button
               onClick={() => downloadFile(result.shopifyImportCsv, 'shopify-inventory-import.csv')}
-              className="flex items-center gap-3 p-3 border rounded-lg hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
+              className="group flex items-center gap-3 p-4 bg-gray-900 rounded-xl hover:bg-gray-800 transition-colors"
             >
-              <FileText className="h-8 w-8 text-indigo-600" />
+              <FileText className="h-8 w-8 text-white" />
               <div className="text-left">
-                <div className="font-medium text-gray-900">Shopify Import CSV</div>
-                <div className="text-xs text-gray-500">Ready to import</div>
+                <div className="font-medium text-white">Shopify Import CSV</div>
+                <div className="text-xs text-gray-400">Ready to import</div>
               </div>
             </button>
 
             <button
               onClick={() => downloadFile(result.unmatchedSupplierCsv, 'unmatched-supplier-skus.csv')}
-              className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-colors"
             >
               <FileText className="h-8 w-8 text-amber-500" />
               <div className="text-left">
-                <div className="font-medium text-gray-900">Unmatched Supplier SKUs</div>
+                <div className="font-medium text-gray-900">Unmatched Supplier</div>
                 <div className="text-xs text-gray-500">{summary.unmatchedSupplierCount} SKUs</div>
               </div>
             </button>
 
             <button
               onClick={() => downloadFile(result.unmatchedShopifyCsv, 'unmatched-shopify-skus.csv')}
-              className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-colors"
             >
-              <FileText className="h-8 w-8 text-gray-500" />
+              <FileText className="h-8 w-8 text-gray-400" />
               <div className="text-left">
-                <div className="font-medium text-gray-900">Unmatched Shopify SKUs</div>
+                <div className="font-medium text-gray-900">Unmatched Shopify</div>
                 <div className="text-xs text-gray-500">{summary.unmatchedShopifyCount} SKUs</div>
               </div>
             </button>
 
             <button
               onClick={() => downloadFile(result.issuesCsv, 'issues.csv')}
-              className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-colors"
             >
-              <FileText className="h-8 w-8 text-red-500" />
+              <FileText className="h-8 w-8 text-red-400" />
               <div className="text-left">
                 <div className="font-medium text-gray-900">Issues Report</div>
                 <div className="text-xs text-gray-500">{issues.length} issues</div>
@@ -142,9 +183,9 @@ export function ResultsDisplay({ result }: ResultsDisplayProps) {
 
             <button
               onClick={() => downloadFile(result.ambiguousCsv, 'ambiguous-matches.csv')}
-              className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-colors"
             >
-              <FileText className="h-8 w-8 text-purple-500" />
+              <FileText className="h-8 w-8 text-gray-400" />
               <div className="text-left">
                 <div className="font-medium text-gray-900">Ambiguous Matches</div>
                 <div className="text-xs text-gray-500">{summary.ambiguousCount} matches</div>
@@ -153,9 +194,9 @@ export function ResultsDisplay({ result }: ResultsDisplayProps) {
 
             <button
               onClick={() => downloadFile(result.summaryHtml, 'summary-report.html', 'text/html')}
-              className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-colors"
             >
-              <FileText className="h-8 w-8 text-blue-500" />
+              <FileText className="h-8 w-8 text-gray-400" />
               <div className="text-left">
                 <div className="font-medium text-gray-900">Summary Report</div>
                 <div className="text-xs text-gray-500">Printable HTML</div>
@@ -167,14 +208,16 @@ export function ResultsDisplay({ result }: ResultsDisplayProps) {
 
       {/* Issues Section */}
       {issues.length > 0 && (
-        <div className="bg-white rounded-lg border">
+        <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
           <button
             onClick={() => toggleSection('issues')}
-            className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-gray-50"
+            className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
           >
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-amber-500" />
-              <span className="font-medium">Issues ({issues.length})</span>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-amber-100 rounded-lg">
+                <AlertTriangle className="h-4 w-4 text-amber-600" />
+              </div>
+              <span className="font-semibold text-gray-900">Issues ({issues.length})</span>
             </div>
             {expandedSection === 'issues' ? (
               <ChevronUp className="h-5 w-5 text-gray-400" />
@@ -184,13 +227,13 @@ export function ResultsDisplay({ result }: ResultsDisplayProps) {
           </button>
 
           {expandedSection === 'issues' && (
-            <div className="px-4 pb-4">
-              <div className="flex gap-2 mb-3">
+            <div className="px-5 pb-5">
+              <div className="flex gap-2 mb-4">
                 <button
                   onClick={() => setIssueFilter('all')}
-                  className={`px-3 py-1 rounded-full text-sm ${
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     issueFilter === 'all'
-                      ? 'bg-gray-200 text-gray-800'
+                      ? 'bg-gray-900 text-white'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
@@ -198,9 +241,9 @@ export function ResultsDisplay({ result }: ResultsDisplayProps) {
                 </button>
                 <button
                   onClick={() => setIssueFilter('error')}
-                  className={`px-3 py-1 rounded-full text-sm ${
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     issueFilter === 'error'
-                      ? 'bg-red-100 text-red-800'
+                      ? 'bg-red-600 text-white'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
@@ -208,9 +251,9 @@ export function ResultsDisplay({ result }: ResultsDisplayProps) {
                 </button>
                 <button
                   onClick={() => setIssueFilter('warning')}
-                  className={`px-3 py-1 rounded-full text-sm ${
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     issueFilter === 'warning'
-                      ? 'bg-amber-100 text-amber-800'
+                      ? 'bg-amber-500 text-white'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
@@ -223,7 +266,7 @@ export function ResultsDisplay({ result }: ResultsDisplayProps) {
                   <IssueItem key={issue.id} issue={issue} />
                 ))}
                 {filteredIssues.length > 50 && (
-                  <p className="text-sm text-gray-500 text-center py-2">
+                  <p className="text-sm text-gray-500 text-center py-3 bg-gray-50 rounded-lg">
                     Showing first 50 of {filteredIssues.length} issues. Download the full report for all issues.
                   </p>
                 )}
@@ -234,14 +277,16 @@ export function ResultsDisplay({ result }: ResultsDisplayProps) {
       )}
 
       {/* Detailed Stats */}
-      <div className="bg-white rounded-lg border">
+      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         <button
           onClick={() => toggleSection('stats')}
-          className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-gray-50"
+          className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
         >
-          <div className="flex items-center gap-2">
-            <Info className="h-5 w-5 text-blue-500" />
-            <span className="font-medium">Detailed Statistics</span>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-gray-100 rounded-lg">
+              <Info className="h-4 w-4 text-gray-600" />
+            </div>
+            <span className="font-semibold text-gray-900">Detailed Statistics</span>
           </div>
           {expandedSection === 'stats' ? (
             <ChevronUp className="h-5 w-5 text-gray-400" />
@@ -251,51 +296,55 @@ export function ResultsDisplay({ result }: ResultsDisplayProps) {
         </button>
 
         {expandedSection === 'stats' && (
-          <div className="px-4 pb-4">
+          <div className="px-5 pb-5">
             <dl className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <div>
-                <dt className="text-sm text-gray-500">Total Shopify Rows</dt>
-                <dd className="text-lg font-medium">{formatNumber(summary.totalShopifyRows)}</dd>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <dt className="text-xs text-gray-500 uppercase tracking-wide">Total Shopify Rows</dt>
+                <dd className="text-lg font-semibold text-gray-900 mt-1 tabular-nums">{formatNumber(summary.totalShopifyRows)}</dd>
               </div>
-              <div>
-                <dt className="text-sm text-gray-500">Total Supplier Rows</dt>
-                <dd className="text-lg font-medium">{formatNumber(summary.totalSupplierRows)}</dd>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <dt className="text-xs text-gray-500 uppercase tracking-wide">Total Supplier Rows</dt>
+                <dd className="text-lg font-semibold text-gray-900 mt-1 tabular-nums">{formatNumber(summary.totalSupplierRows)}</dd>
               </div>
-              <div>
-                <dt className="text-sm text-gray-500">Matched SKUs</dt>
-                <dd className="text-lg font-medium text-green-600">{formatNumber(summary.matchedCount)}</dd>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <dt className="text-xs text-gray-500 uppercase tracking-wide">Matched SKUs</dt>
+                <dd className="text-lg font-semibold text-emerald-600 mt-1 tabular-nums">{formatNumber(summary.matchedCount)}</dd>
               </div>
-              <div>
-                <dt className="text-sm text-gray-500">Will Update</dt>
-                <dd className="text-lg font-medium text-indigo-600">{formatNumber(summary.updatedCount)}</dd>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <dt className="text-xs text-gray-500 uppercase tracking-wide">Will Update</dt>
+                <dd className="text-lg font-semibold text-gray-900 mt-1 tabular-nums">{formatNumber(summary.updatedCount)}</dd>
               </div>
-              <div>
-                <dt className="text-sm text-gray-500">Unchanged</dt>
-                <dd className="text-lg font-medium text-gray-600">{formatNumber(summary.unchangedCount)}</dd>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <dt className="text-xs text-gray-500 uppercase tracking-wide">Unchanged</dt>
+                <dd className="text-lg font-semibold text-gray-500 mt-1 tabular-nums">{formatNumber(summary.unchangedCount)}</dd>
               </div>
-              <div>
-                <dt className="text-sm text-gray-500">Ambiguous</dt>
-                <dd className="text-lg font-medium text-amber-600">{formatNumber(summary.ambiguousCount)}</dd>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <dt className="text-xs text-gray-500 uppercase tracking-wide">Ambiguous</dt>
+                <dd className="text-lg font-semibold text-amber-600 mt-1 tabular-nums">{formatNumber(summary.ambiguousCount)}</dd>
               </div>
-              <div>
-                <dt className="text-sm text-gray-500">Unmatched Supplier</dt>
-                <dd className="text-lg font-medium text-amber-600">{formatNumber(summary.unmatchedSupplierCount)}</dd>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <dt className="text-xs text-gray-500 uppercase tracking-wide">Unmatched Supplier</dt>
+                <dd className="text-lg font-semibold text-amber-600 mt-1 tabular-nums">{formatNumber(summary.unmatchedSupplierCount)}</dd>
               </div>
-              <div>
-                <dt className="text-sm text-gray-500">Shopify Only</dt>
-                <dd className="text-lg font-medium text-gray-500">{formatNumber(summary.unmatchedShopifyCount)}</dd>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <dt className="text-xs text-gray-500 uppercase tracking-wide">Shopify Only</dt>
+                <dd className="text-lg font-semibold text-gray-500 mt-1 tabular-nums">{formatNumber(summary.unmatchedShopifyCount)}</dd>
               </div>
-              <div>
-                <dt className="text-sm text-gray-500">Processing Time</dt>
-                <dd className="text-lg font-medium">{(summary.processingTimeMs / 1000).toFixed(2)}s</dd>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <dt className="text-xs text-gray-500 uppercase tracking-wide">Processing Time</dt>
+                <dd className="text-lg font-semibold text-gray-900 mt-1 tabular-nums">{(summary.processingTimeMs / 1000).toFixed(2)}s</dd>
               </div>
             </dl>
 
             {summary.locationsProcessed.length > 0 && (
-              <div className="mt-4 pt-4 border-t">
-                <dt className="text-sm text-gray-500 mb-1">Locations</dt>
-                <dd className="text-sm">
-                  {summary.locationsProcessed.join(', ')}
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <dt className="text-xs text-gray-500 uppercase tracking-wide mb-2">Locations Processed</dt>
+                <dd className="flex flex-wrap gap-2">
+                  {summary.locationsProcessed.map((loc) => (
+                    <span key={loc} className="px-2 py-1 bg-gray-100 rounded text-sm text-gray-700">
+                      {loc}
+                    </span>
+                  ))}
                 </dd>
               </div>
             )}
@@ -311,20 +360,23 @@ function IssueItem({ issue }: { issue: Issue }) {
     error: {
       icon: AlertCircle,
       bg: 'bg-red-50',
-      border: 'border-red-200',
+      border: 'border-red-100',
       iconColor: 'text-red-500',
+      tagBg: 'bg-red-100 text-red-700',
     },
     warning: {
       icon: AlertTriangle,
       bg: 'bg-amber-50',
-      border: 'border-amber-200',
+      border: 'border-amber-100',
       iconColor: 'text-amber-500',
+      tagBg: 'bg-amber-100 text-amber-700',
     },
     info: {
       icon: Info,
-      bg: 'bg-blue-50',
-      border: 'border-blue-200',
-      iconColor: 'text-blue-500',
+      bg: 'bg-gray-50',
+      border: 'border-gray-100',
+      iconColor: 'text-gray-500',
+      tagBg: 'bg-gray-100 text-gray-700',
     },
   };
 
@@ -332,12 +384,12 @@ function IssueItem({ issue }: { issue: Issue }) {
   const Icon = config.icon;
 
   return (
-    <div className={`p-3 rounded-lg border ${config.bg} ${config.border}`}>
-      <div className="flex items-start gap-2">
-        <Icon className={`h-4 w-4 mt-0.5 ${config.iconColor}`} />
+    <div className={`p-4 rounded-xl border ${config.bg} ${config.border}`}>
+      <div className="flex items-start gap-3">
+        <Icon className={`h-5 w-5 mt-0.5 flex-shrink-0 ${config.iconColor}`} />
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-mono bg-white px-1.5 py-0.5 rounded border">
+          <div className="flex items-center gap-2 flex-wrap mb-1">
+            <span className={`text-xs font-mono px-2 py-0.5 rounded ${config.tagBg}`}>
               {issue.code}
             </span>
             {issue.rowIndex !== null && (
@@ -347,14 +399,14 @@ function IssueItem({ issue }: { issue: Issue }) {
             )}
             {issue.column && (
               <span className="text-xs text-gray-500">
-                Column: {issue.column}
+                • Column: {issue.column}
               </span>
             )}
           </div>
-          <p className="text-sm text-gray-700 mt-1">{issue.message}</p>
+          <p className="text-sm text-gray-700">{issue.message}</p>
           {issue.suggestedFix && (
-            <p className="text-xs text-gray-500 mt-1">
-              <span className="font-medium">Fix:</span> {issue.suggestedFix}
+            <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
+              <span className="font-medium">Suggestion:</span> {issue.suggestedFix}
             </p>
           )}
         </div>

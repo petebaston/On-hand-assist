@@ -22,56 +22,50 @@ export function WizardStepper({
   const currentIndex = steps.findIndex((s) => s.id === currentStep);
 
   return (
-    <nav aria-label="Progress">
-      <ol className="flex items-center">
+    <nav aria-label="Progress" className="mb-8">
+      <ol className="flex items-center justify-between">
         {steps.map((step, index) => {
           const isCompleted = completedSteps.includes(step.id);
           const isCurrent = step.id === currentStep;
           const isPast = index < currentIndex;
 
           return (
-            <li
-              key={step.id}
-              className={`relative flex-1 ${index !== steps.length - 1 ? 'pr-8' : ''}`}
-            >
-              {index !== steps.length - 1 && (
+            <li key={step.id} className="flex items-center flex-1 last:flex-none">
+              <div className="flex items-center">
                 <div
-                  className={`absolute top-4 left-0 w-full h-0.5 ${
-                    isPast || isCompleted ? 'bg-indigo-600' : 'bg-gray-200'
-                  }`}
-                  style={{ left: '50%', width: '100%' }}
-                />
-              )}
-
-              <div className="relative flex flex-col items-center group">
-                <span
                   className={`
-                    flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium
-                    transition-colors duration-200
+                    flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium transition-all
                     ${isCompleted
-                      ? 'bg-indigo-600 text-white'
+                      ? 'bg-gray-900 text-white'
                       : isCurrent
-                        ? 'bg-indigo-600 text-white ring-4 ring-indigo-100'
-                        : 'bg-gray-200 text-gray-500'
+                        ? 'bg-gray-900 text-white'
+                        : 'bg-gray-100 text-gray-400'
                     }
                   `}
                 >
                   {isCompleted ? (
-                    <Check className="w-5 h-5" />
+                    <Check className="w-4 h-4" />
                   ) : (
                     <span>{index + 1}</span>
                   )}
-                </span>
-
+                </div>
                 <span
                   className={`
-                    mt-2 text-xs font-medium text-center
-                    ${isCurrent ? 'text-indigo-600' : 'text-gray-500'}
+                    ml-3 text-sm font-medium hidden sm:block
+                    ${isCurrent || isCompleted ? 'text-gray-900' : 'text-gray-400'}
                   `}
                 >
                   {step.label}
                 </span>
               </div>
+
+              {index !== steps.length - 1 && (
+                <div
+                  className={`flex-1 h-px mx-4 sm:mx-6 ${
+                    isPast || isCompleted ? 'bg-gray-900' : 'bg-gray-200'
+                  }`}
+                />
+              )}
             </li>
           );
         })}

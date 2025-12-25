@@ -1,183 +1,208 @@
 'use client';
 
 import { InventoryWizard } from '@/components/wizard';
-import { FileSpreadsheet, CheckCircle, AlertTriangle, Download } from 'lucide-react';
+import {
+  Shield,
+  Zap,
+  FileCheck,
+  ArrowRight,
+  Lock,
+  Table2,
+  GitCompare,
+  AlertOctagon
+} from 'lucide-react';
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center gap-3">
-            <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-2 rounded-lg">
-              <FileSpreadsheet className="h-6 w-6 text-white" />
+    <div className="min-h-screen bg-[#FAFAFA]">
+      {/* Minimal Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+              <Table2 className="h-4 w-4 text-white" />
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">OnHand Helper</h1>
-              <p className="text-sm text-gray-500">Shopify Inventory CSV Tool</p>
-            </div>
+            <span className="font-semibold text-gray-900 tracking-tight">OnHand</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <Lock className="h-3 w-3" />
+            <span>100% client-side</span>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-700 text-white py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Generate a safe Shopify Inventory CSV import in 2 minutes
-          </h2>
-          <p className="text-lg text-indigo-100 max-w-2xl mx-auto">
-            Upload your Shopify Inventory export + supplier stock file.
-            We produce the right import file + a mismatch report.
-          </p>
-
-          {/* Trust badges */}
-          <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm">
-            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
-              <CheckCircle className="h-4 w-4" />
-              <span>Validates your data</span>
-            </div>
-            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
-              <AlertTriangle className="h-4 w-4" />
-              <span>Catches common errors</span>
-            </div>
-            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
-              <Download className="h-4 w-4" />
-              <span>Download ready-to-import CSV</span>
-            </div>
+      {/* Hero - Clean and Direct */}
+      <section className="pt-32 pb-16 px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-full text-xs font-medium mb-6">
+            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+            Free tool for Shopify merchants
           </div>
 
-          <p className="mt-6 text-sm text-indigo-200">
-            Processing happens locally in your browser. Your data is never uploaded.
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight leading-[1.1] mb-6">
+            Stop breaking your
+            <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-gray-600 to-gray-900">
+              inventory imports
+            </span>
+          </h1>
+
+          <p className="text-lg text-gray-600 max-w-xl mx-auto leading-relaxed mb-8">
+            Match your supplier feed to Shopify inventory. Get a validated import file
+            and see exactly what will change before you upload.
           </p>
+
+          <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
+            <div className="flex items-center gap-2">
+              <FileCheck className="h-4 w-4 text-gray-400" />
+              <span>Auto-detects format</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <GitCompare className="h-4 w-4 text-gray-400" />
+              <span>Smart SKU matching</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <AlertOctagon className="h-4 w-4 text-gray-400" />
+              <span>Catches errors</span>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Main App */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <InventoryWizard />
+      {/* Main App - The Star */}
+      <main className="px-6 pb-24">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
+            <div className="p-8 md:p-10">
+              <InventoryWizard />
+            </div>
+          </div>
+        </div>
       </main>
 
-      {/* How it works */}
-      <section className="bg-white border-t py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-2xl font-bold text-center text-gray-900 mb-12">
-            How to export your Shopify inventory
-          </h3>
+      {/* Problem/Solution Section */}
+      <section className="px-6 py-24 bg-white border-y border-gray-100">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+              Shopify CSV imports are a minefield
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              One wrong column and you get "Import successful" but nothing changes.
+              We solve that.
+            </p>
+          </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
-                1
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="group p-6 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+              <div className="w-10 h-10 bg-white rounded-lg shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Shield className="h-5 w-5 text-gray-700" />
               </div>
-              <h4 className="font-semibold mb-2">Go to Inventory</h4>
-              <p className="text-sm text-gray-600">
-                In Shopify Admin, navigate to Products → Inventory
+              <h3 className="font-semibold text-gray-900 mb-2">Format Detection</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Automatically identifies "All states" vs "Available" exports and edits only the correct columns.
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
-                2
+            <div className="group p-6 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+              <div className="w-10 h-10 bg-white rounded-lg shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Zap className="h-5 w-5 text-gray-700" />
               </div>
-              <h4 className="font-semibold mb-2">Click Export</h4>
-              <p className="text-sm text-gray-600">
-                Click the Export button and choose "All states" format
+              <h3 className="font-semibold text-gray-900 mb-2">Mismatch Report</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                See which SKUs matched, which didn't, and why. No more guessing what went wrong.
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
-                3
+            <div className="group p-6 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+              <div className="w-10 h-10 bg-white rounded-lg shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <AlertOctagon className="h-5 w-5 text-gray-700" />
               </div>
-              <h4 className="font-semibold mb-2">Upload Here</h4>
-              <p className="text-sm text-gray-600">
-                Download the CSV and upload it to OnHand Helper
+              <h3 className="font-semibold text-gray-900 mb-2">Danger Checks</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Flags large quantity drops, items going to zero, and decimal values that Shopify rejects.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-2xl font-bold text-center text-gray-900 mb-12">
-            Why use OnHand Helper?
-          </h3>
+      {/* How to Export */}
+      <section className="px-6 py-24">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-xl font-semibold text-gray-900 mb-8 text-center">
+            How to export from Shopify
+          </h2>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg border p-6">
-              <h4 className="font-semibold text-lg mb-2 text-gray-900">
-                Prevent "success but no changes"
-              </h4>
-              <p className="text-gray-600 text-sm">
-                Shopify has two inventory CSV formats with different editable columns.
-                We detect the format and only modify the correct columns.
-              </p>
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-4">
+            <div className="flex items-start gap-4">
+              <div className="w-8 h-8 rounded-full bg-black text-white text-sm font-medium flex items-center justify-center flex-shrink-0">
+                1
+              </div>
+              <div>
+                <p className="font-medium text-gray-900">Products → Inventory</p>
+                <p className="text-sm text-gray-500">In your Shopify Admin</p>
+              </div>
             </div>
 
-            <div className="bg-white rounded-lg border p-6">
-              <h4 className="font-semibold text-lg mb-2 text-gray-900">
-                Smart SKU matching
-              </h4>
-              <p className="text-gray-600 text-sm">
-                Matches exact SKUs first, then normalized SKUs (ignoring case/whitespace).
-                See exactly which SKUs matched and which didn't.
-              </p>
+            <ArrowRight className="hidden md:block h-4 w-4 text-gray-300" />
+
+            <div className="flex items-start gap-4">
+              <div className="w-8 h-8 rounded-full bg-black text-white text-sm font-medium flex items-center justify-center flex-shrink-0">
+                2
+              </div>
+              <div>
+                <p className="font-medium text-gray-900">Click Export</p>
+                <p className="text-sm text-gray-500">Choose "All states"</p>
+              </div>
             </div>
 
-            <div className="bg-white rounded-lg border p-6">
-              <h4 className="font-semibold text-lg mb-2 text-gray-900">
-                Danger checks
-              </h4>
-              <p className="text-gray-600 text-sm">
-                Warns you about large quantity drops, items going to zero,
-                invalid formats, and other potential issues.
-              </p>
-            </div>
+            <ArrowRight className="hidden md:block h-4 w-4 text-gray-300" />
 
-            <div className="bg-white rounded-lg border p-6">
-              <h4 className="font-semibold text-lg mb-2 text-gray-900">
-                Comprehensive reports
-              </h4>
-              <p className="text-gray-600 text-sm">
-                Download unmatched SKUs, issues report, and a printable summary.
-                Know exactly what will change before you import.
-              </p>
+            <div className="flex items-start gap-4">
+              <div className="w-8 h-8 rounded-full bg-black text-white text-sm font-medium flex items-center justify-center flex-shrink-0">
+                3
+              </div>
+              <div>
+                <p className="font-medium text-gray-900">Upload here</p>
+                <p className="text-sm text-gray-500">Along with supplier feed</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-2xl font-bold mb-4">
-            Want this automated daily?
-          </h3>
-          <p className="text-indigo-100 mb-6">
-            I build custom Shopify integrations that automatically sync supplier feeds.
-            No more manual CSV imports!
+      <section className="px-6 py-16 bg-gray-900">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-2xl font-bold text-white mb-3">
+            Need this automated?
+          </h2>
+          <p className="text-gray-400 mb-8 max-w-lg mx-auto">
+            I build integrations that sync supplier feeds to Shopify automatically.
+            Daily updates, no CSV juggling.
           </p>
           <a
-            href="#contact"
-            className="inline-flex items-center px-6 py-3 bg-white text-indigo-600 font-semibold rounded-lg hover:bg-indigo-50 transition-colors"
+            href="mailto:hello@example.com"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 font-medium rounded-lg hover:bg-gray-100 transition-colors"
           >
-            Get in touch
+            Let's talk
+            <ArrowRight className="h-4 w-4" />
           </a>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
+      <footer className="px-6 py-8 border-t border-gray-100 bg-white">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 bg-black rounded flex items-center justify-center">
+              <Table2 className="h-3 w-3 text-white" />
+            </div>
+            <span>OnHand Helper</span>
+          </div>
           <p>
-            OnHand Helper is a free tool. Your data is processed locally in your browser.
-          </p>
-          <p className="mt-2">
-            Built for Shopify merchants by a Shopify integration specialist.
+            Your data never leaves your browser. Built by a Shopify integration specialist.
           </p>
         </div>
       </footer>
