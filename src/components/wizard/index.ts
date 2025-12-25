@@ -1,0 +1,1 @@
+export { InventoryWizard } from './InventoryWizard';
